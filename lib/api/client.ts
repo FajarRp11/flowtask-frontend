@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8001/api";
+export const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8001/api";
 
 export class ApiError extends Error {
   status: number;
@@ -12,42 +12,34 @@ export class ApiError extends Error {
   }
 }
 
-export function getToken(): string | null {
-  if (typeof window === "undefined") return null;
-  return localStorage.getItem("token");
-}
-
-export function setToken(token: string): void {
-  if (typeof window !== "undefined") {
-    localStorage.setItem("token", token);
-  }
-}
-
-export function removeToken(): void {
-  if (typeof window !== "undefined") {
-    localStorage.removeItem("token");
-  }
+function getCookie(name: string): string | null {
+  if (typeof document === "undefined") return null;
+  const match = document.cookie.match(new RegExp("(^|; )" + name + "=([^;]*)"));
+  return match ? decodeURIComponent(match[2]) : null;
 }
 
 export async function apiClient<T>(
   endpoint: string,
   options: RequestInit = {},
 ): Promise<T> {
-  const token = getToken();
-
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     Accept: "application/json",
     ...(options.headers as Record<string, string>),
   };
 
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
+  const method = (options.method || "GET").toUpperCase();
+  if (method !== "GET" && method !== "HEAD") {
+    const xsrfToken = getCookie("XSRF-TOKEN");
+    if (xsrfToken) {
+      headers["X-XSRF-TOKEN"] = xsrfToken;
+    }
   }
 
   const response = await fetch(`${API_URL}${endpoint}`, {
     ...options,
     headers,
+    credentials: "include",
   });
 
   const data = await response.json().catch(() => null);
@@ -55,7 +47,6 @@ export async function apiClient<T>(
   if (!response.ok) {
     let message = data?.message || `HTTP error ${response.status}`;
     if (response.status === 422 && data?.errors) {
-      // Return validation error format
       message = data.message || "Validation failed";
     }
     throw new ApiError(response.status, message, data);

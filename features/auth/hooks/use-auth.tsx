@@ -3,13 +3,11 @@
 import {
   createContext,
   useContext,
-  useEffect,
-  useState,
   ReactNode,
 } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { authApi } from "@/lib/api/auth";
-import { getToken, setToken, removeToken, ApiError } from "@/lib/api/client";
+import { ApiError } from "@/lib/api/client";
 import { User, LoginInput, RegisterInput } from "@/features/auth/types";
 
 interface AuthContextType {
@@ -25,21 +23,10 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
-  const [token, setTokenState] = useState<string | null>(null);
-  const [isInitialized, setIsInitialized] = useState(false);
-
-  useEffect(() => {
-    const existingToken = getToken();
-    if (existingToken) {
-      setTokenState(existingToken);
-    }
-    setIsInitialized(true);
-  }, []);
 
   const {
     data: userData,
     isLoading: isUserLoading,
-    error: userError,
   } = useQuery({
     queryKey: ["auth", "me"],
     queryFn: async () => {
@@ -48,20 +35,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return response.user;
       } catch (err) {
         if (err instanceof ApiError && err.status === 401) {
-          removeToken();
-          setTokenState(null);
+          return null;
         }
         throw err;
       }
     },
-    enabled: !!token,
+    retry: false,
   });
 
   const loginMutation = useMutation({
     mutationFn: authApi.login,
     onSuccess: (data) => {
-      setToken(data.token);
-      setTokenState(data.token);
       queryClient.setQueryData(["auth", "me"], data.user);
     },
   });
@@ -69,8 +53,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const registerMutation = useMutation({
     mutationFn: authApi.register,
     onSuccess: (data) => {
-      setToken(data.token);
-      setTokenState(data.token);
       queryClient.setQueryData(["auth", "me"], data.user);
     },
   });
@@ -80,8 +62,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         await authApi.logout();
       } finally {
-        removeToken();
-        setTokenState(null);
         queryClient.setQueryData(["auth", "me"], null);
         queryClient.clear();
       }
@@ -100,7 +80,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await logoutMutation.mutateAsync();
   };
 
-  const isLoading = !isInitialized || (!!token && isUserLoading);
+  const isLoading = isUserLoading;
   const user = userData ?? null;
   const isAuthenticated = !!user;
 

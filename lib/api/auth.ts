@@ -1,15 +1,30 @@
-import { apiClient } from "./client";
+import { apiClient, API_URL } from "./client";
 import { AuthResponse, LoginInput, MeResponse, RegisterInput } from "@/features/auth/types";
 
+export async function getCsrfCookie(): Promise<void> {
+  const baseUrl = API_URL.replace(/\/api\/?$/, "");
+  await fetch(`${baseUrl}/sanctum/csrf-cookie`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+    },
+    credentials: "include",
+  });
+}
+
 export const authApi = {
-  login: (data: LoginInput): Promise<AuthResponse> => {
+  getCsrfCookie,
+
+  login: async (data: LoginInput): Promise<AuthResponse> => {
+    await getCsrfCookie();
     return apiClient<AuthResponse>("/auth/login", {
       method: "POST",
       body: JSON.stringify(data),
     });
   },
 
-  register: (data: RegisterInput): Promise<AuthResponse> => {
+  register: async (data: RegisterInput): Promise<AuthResponse> => {
+    await getCsrfCookie();
     return apiClient<AuthResponse>("/auth/register", {
       method: "POST",
       body: JSON.stringify(data),
