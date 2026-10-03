@@ -1,9 +1,35 @@
-<!-- BEGIN:nextjs-agent-rules -->
+# FlowTask Frontend
 
-# This is NOT the Next.js you know
+## Stack
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+- Next.js
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- TanStack Query
+- React Hook Form
+- Zod
 
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+## Architecture
 
-<!-- END:nextjs-agent-rules -->
+- Feature-based organization
+- API calls must go through the API layer
+- Server state uses TanStack Query
+- Forms use React Hook Form + Zod
+- Do not duplicate API logic inside components
+
+## Backend API
+
+- Laravel REST API
+- Authentication: Sanctum
+- API resources expose public UUID as `id`
+- Internal database BIGINT IDs must never be exposed
+
+## Rules
+
+- Reuse existing components before creating new ones
+- Do not introduce a new library without asking
+- Keep components small and composable
+- Follow existing naming conventions
+- Do not modify unrelated features
+- Run lint/typecheck after implementation
