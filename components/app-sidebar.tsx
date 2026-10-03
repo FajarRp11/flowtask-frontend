@@ -7,9 +7,7 @@ import {
   LogOut,
   Settings,
   Users,
-  CheckCircle2,
-  Home,
-  Plus,
+  Building2,
 } from "lucide-react";
 
 import {
@@ -21,70 +19,63 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { useAuth } from "@/features/auth/hooks/use-auth";
+import { useWorkspace } from "@/features/workspace/context/workspace-context";
+import { WorkspaceSwitcher } from "@/features/workspace/components/workspace-switcher";
 import Link from "next/link";
-
-const mainNavItems = [
-  {
-    title: "Dashboard",
-    url: "/dashboard",
-    icon: LayoutDashboard,
-    isActive: true,
-  },
-  {
-    title: "Proyek",
-    url: "#",
-    icon: FolderKanban,
-  },
-  {
-    title: "Tugas Saya",
-    url: "#",
-    icon: CheckSquare,
-  },
-  {
-    title: "Tim",
-    url: "#",
-    icon: Users,
-  },
-];
-
-const secondaryNavItems = [
-  {
-    title: "Pengaturan",
-    url: "#",
-    icon: Settings,
-  },
-];
 
 export function AppSidebar() {
   const { user, logout } = useAuth();
+  const { selectedWorkspace } = useWorkspace();
+
+  const mainNavItems = [
+    {
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: LayoutDashboard,
+    },
+    ...(selectedWorkspace
+      ? [
+          {
+            title: selectedWorkspace.name,
+            url: `/workspaces/${selectedWorkspace.id}`,
+            icon: Building2,
+          },
+        ]
+      : []),
+    {
+      title: "Proyek",
+      url: "#",
+      icon: FolderKanban,
+    },
+    {
+      title: "Tugas Saya",
+      url: "#",
+      icon: CheckSquare,
+    },
+    {
+      title: "Tim",
+      url: "#",
+      icon: Users,
+    },
+  ];
+
+  const secondaryNavItems = [
+    {
+      title: "Pengaturan",
+      url: "#",
+      icon: Settings,
+    },
+  ];
 
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-            >
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                <CheckCircle2 className="size-5" />
-              </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">FlowTask</span>
-                <span className="truncate text-xs text-muted-foreground">
-                  Manajemen Tugas
-                </span>
-              </div>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <WorkspaceSwitcher />
       </SidebarHeader>
 
       <SidebarContent>
@@ -93,10 +84,9 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {mainNavItems.map((item) => (
-                <SidebarMenuItem key={item.title} className="pb-2 last:pb-0">
+                <SidebarMenuItem key={item.title} className="pb-1 last:pb-0">
                   <SidebarMenuButton
                     tooltip={item.title}
-                    isActive={item.isActive}
                     render={<Link href={item.url} />}
                   >
                     <item.icon />
@@ -108,7 +98,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup>
+        <SidebarGroup className="mt-auto">
           <SidebarGroupLabel>Lainnya</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
