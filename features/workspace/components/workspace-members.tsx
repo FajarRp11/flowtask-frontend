@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -200,37 +201,41 @@ export function WorkspaceMembers({ workspaceId }: WorkspaceMembersProps) {
                         </span>
                       ) : (
                         <DropdownMenu>
-                          <DropdownMenuTrigger>
-                            <Button variant="ghost" size="icon-sm">
-                              <MoreHorizontal className="size-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
+                          <DropdownMenuTrigger
+                            render={
+                              <Button variant="ghost" size="icon-sm">
+                                <MoreHorizontal className="size-4" />
+                              </Button>
+                            }
+                          />
                           <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Ubah Peran</DropdownMenuLabel>
-                            <DropdownMenuItem
-                              disabled={member.role === "admin"}
-                              onClick={() => handleRoleChange(member, "admin")}
-                              className="gap-2"
-                            >
-                              <Shield className="size-4" />
-                              <span>Set sebagai Admin</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              disabled={member.role === "member"}
-                              onClick={() => handleRoleChange(member, "member")}
-                              className="gap-2"
-                            >
-                              <Shield className="size-4" />
-                              <span>Set sebagai Member</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              disabled={member.role === "viewer"}
-                              onClick={() => handleRoleChange(member, "viewer")}
-                              className="gap-2"
-                            >
-                              <Shield className="size-4" />
-                              <span>Set sebagai Viewer</span>
-                            </DropdownMenuItem>
+                            <DropdownMenuGroup>
+                              <DropdownMenuLabel>Ubah Peran</DropdownMenuLabel>
+                              <DropdownMenuItem
+                                disabled={member.role === "admin"}
+                                onClick={() => handleRoleChange(member, "admin")}
+                                className="gap-2"
+                              >
+                                <Shield className="size-4" />
+                                <span>Set sebagai Admin</span>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                disabled={member.role === "member"}
+                                onClick={() => handleRoleChange(member, "member")}
+                                className="gap-2"
+                              >
+                                <Shield className="size-4" />
+                                <span>Set sebagai Member</span>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                disabled={member.role === "viewer"}
+                                onClick={() => handleRoleChange(member, "viewer")}
+                                className="gap-2"
+                              >
+                                <Shield className="size-4" />
+                                <span>Set sebagai Viewer</span>
+                              </DropdownMenuItem>
+                            </DropdownMenuGroup>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                               onClick={() => setMemberToRemove(member)}
