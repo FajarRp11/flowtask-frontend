@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Settings, Users, FolderKanban, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,8 @@ import { useWorkspace } from "../context/workspace-context";
 import { WorkspaceMembers } from "./workspace-members";
 import { WorkspaceSettingsDialog } from "./workspace-settings-dialog";
 import { WorkspaceRole } from "../types";
+import { CreateProjectDialog } from "@/features/project/components/project-dialogs";
+import Link from "next/link";
 
 interface WorkspaceDetailProps {
   workspaceId: string;
@@ -25,9 +27,14 @@ const roleBadgeLabel: Record<WorkspaceRole, string> = {
 
 export function WorkspaceDetail({ workspaceId }: WorkspaceDetailProps) {
   const { data: workspace, isLoading, isError, error } = useWorkspaceDetail(workspaceId);
-  const { role, canManageWorkspace } = useWorkspace();
+  const { role, canManageWorkspace, setSelectedWorkspaceId } = useWorkspace();
   const [activeTab, setActiveTab] = useState<"projects" | "members">("projects");
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [createProjectOpen, setCreateProjectOpen] = useState(false);
+
+  useEffect(() => {
+    setSelectedWorkspaceId(workspaceId);
+  }, [workspaceId]);
 
   if (isLoading) {
     return (
@@ -99,22 +106,20 @@ export function WorkspaceDetail({ workspaceId }: WorkspaceDetailProps) {
         <nav className="-mb-px flex gap-6" aria-label="Tabs">
           <button
             onClick={() => setActiveTab("projects")}
-            className={`flex items-center gap-2 border-b-2 py-3 px-1 text-sm font-medium transition ${
-              activeTab === "projects"
-                ? "border-primary text-primary"
-                : "border-transparent text-zinc-500 hover:border-zinc-300 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
-            }`}
+            className={`flex items-center gap-2 border-b-2 py-3 px-1 text-sm font-medium transition ${activeTab === "projects"
+              ? "border-primary text-primary"
+              : "border-transparent text-zinc-500 hover:border-zinc-300 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+              }`}
           >
             <FolderKanban className="size-4" />
             <span>Proyek</span>
           </button>
           <button
             onClick={() => setActiveTab("members")}
-            className={`flex items-center gap-2 border-b-2 py-3 px-1 text-sm font-medium transition ${
-              activeTab === "members"
-                ? "border-primary text-primary"
-                : "border-transparent text-zinc-500 hover:border-zinc-300 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
-            }`}
+            className={`flex items-center gap-2 border-b-2 py-3 px-1 text-sm font-medium transition ${activeTab === "members"
+              ? "border-primary text-primary"
+              : "border-transparent text-zinc-500 hover:border-zinc-300 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+              }`}
           >
             <Users className="size-4" />
             <span>Anggota ({memberCount})</span>
@@ -129,10 +134,23 @@ export function WorkspaceDetail({ workspaceId }: WorkspaceDetailProps) {
             <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
               Proyek Workspace
             </h3>
-            <Button disabled className="gap-2 opacity-60 cursor-not-allowed">
-              <Plus className="size-4" />
-              <span>Proyek Baru (Segera Hadir)</span>
-            </Button>
+            <div className="flex items-center gap-2">
+              {canManageWorkspace && (
+                <Button onClick={() => setCreateProjectOpen(true)} className="gap-2">
+                  <Plus className="size-4" />
+                  <span>Create project</span>
+                </Button>
+              )}
+              <Button
+                nativeButton={false}
+                render={<Link href={`/workspaces/${workspaceId}/projects`} />}
+                variant="outline"
+                className="gap-2"
+              >
+                <FolderKanban className="size-4" />
+                <span>Lihat Proyek</span>
+              </Button>
+            </div>
           </div>
 
           <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-zinc-300 bg-white p-12 text-center dark:border-zinc-800 dark:bg-zinc-900">
@@ -159,6 +177,12 @@ export function WorkspaceDetail({ workspaceId }: WorkspaceDetailProps) {
           onOpenChange={setSettingsOpen}
         />
       )}
+
+      <CreateProjectDialog
+        workspaceId={workspaceId}
+        open={createProjectOpen}
+        onOpenChange={setCreateProjectOpen}
+      />
     </div>
   );
 }

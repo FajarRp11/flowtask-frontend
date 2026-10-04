@@ -40,16 +40,16 @@ export function AppSidebar() {
     },
     ...(selectedWorkspace
       ? [
-          {
-            title: selectedWorkspace.name,
-            url: `/workspaces/${selectedWorkspace.id}`,
-            icon: Building2,
-          },
-        ]
+        {
+          title: selectedWorkspace.name,
+          url: `/workspaces/${selectedWorkspace.id}`,
+          icon: Building2,
+        },
+      ]
       : []),
     {
       title: "Proyek",
-      url: "#",
+      url: selectedWorkspace ? `/workspaces/${selectedWorkspace.id}/projects` : "#",
       icon: FolderKanban,
     },
     {

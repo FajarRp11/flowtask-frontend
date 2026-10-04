@@ -79,6 +79,15 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     return workspaces[0];
   }, [workspaces, selectedWorkspaceId]);
 
+  const selectedWorkspaceSummary = selectedWorkspace;
+  const { data: selectedWorkspaceDetail } = useQuery({
+    queryKey: ["workspace", selectedWorkspaceSummary?.id],
+    queryFn: () => workspaceApi.getWorkspace(selectedWorkspaceSummary!.id),
+    enabled: isAuthenticated && !!selectedWorkspaceSummary?.id,
+  });
+
+  const workspaceForPermissions = selectedWorkspaceDetail || selectedWorkspaceSummary;
+
   useEffect(() => {
     if (selectedWorkspace && selectedWorkspace.id !== selectedWorkspaceId) {
       setSelectedWorkspaceIdState(selectedWorkspace.id);
@@ -86,23 +95,26 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   }, [selectedWorkspace, selectedWorkspaceId]);
 
   const role = useMemo<WorkspaceRole | null>(() => {
-    if (!selectedWorkspace || !user) return null;
+    if (!workspaceForPermissions || !user) return null;
 
     // Check if user is owner object
-    if (selectedWorkspace.owner?.id === user.id) {
+    if (
+      workspaceForPermissions.owner?.id === user.id ||
+      workspaceForPermissions.owner?.email === user.email
+    ) {
       return "owner";
     }
 
     // Check members list
-    if (selectedWorkspace.members) {
-      const member = selectedWorkspace.members.find(
-        (m) => String(m.id) === String(user.id)
+    if (workspaceForPermissions.members) {
+      const member = workspaceForPermissions.members.find(
+        (m) => String(m.id) === String(user.id) || m.email === user.email
       );
       if (member) return member.role;
     }
 
     return null;
-  }, [selectedWorkspace, user]);
+  }, [workspaceForPermissions, user]);
 
   const isOwner = role === "owner";
   const isAdmin = role === "admin";
