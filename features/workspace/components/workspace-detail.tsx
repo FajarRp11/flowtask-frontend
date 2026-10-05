@@ -12,6 +12,8 @@ import { WorkspaceMembers } from "./workspace-members";
 import { WorkspaceSettingsDialog } from "./workspace-settings-dialog";
 import { WorkspaceRole } from "../types";
 import { CreateProjectDialog } from "@/features/project/components/project-dialogs";
+import { useProjects } from "@/features/project/hooks/use-project-queries";
+import { projectPriorityLabels, projectStatusLabels } from "@/features/project/config";
 import Link from "next/link";
 
 interface WorkspaceDetailProps {
@@ -27,6 +29,11 @@ const roleBadgeLabel: Record<WorkspaceRole, string> = {
 
 export function WorkspaceDetail({ workspaceId }: WorkspaceDetailProps) {
   const { data: workspace, isLoading, isError, error } = useWorkspaceDetail(workspaceId);
+  const {
+    data: projects = [],
+    isLoading: projectsLoading,
+    isError: projectsError,
+  } = useProjects(workspaceId);
   const { role, canManageWorkspace, setSelectedWorkspaceId } = useWorkspace();
   const [activeTab, setActiveTab] = useState<"projects" | "members">("projects");
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -153,17 +160,55 @@ export function WorkspaceDetail({ workspaceId }: WorkspaceDetailProps) {
             </div>
           </div>
 
-          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-zinc-300 bg-white p-12 text-center dark:border-zinc-800 dark:bg-zinc-900">
-            <div className="flex size-12 items-center justify-center rounded-full bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
-              <FolderKanban className="size-6" />
+          {projectsLoading ? (
+            <div className="grid gap-4 md:grid-cols-2">
+              <Skeleton className="h-40 w-full rounded-xl" />
+              <Skeleton className="h-40 w-full rounded-xl" />
             </div>
-            <h4 className="mt-4 text-base font-semibold text-zinc-900 dark:text-zinc-50">
-              Belum ada proyek
-            </h4>
-            <p className="mt-1 max-w-sm text-sm text-zinc-500 dark:text-zinc-400">
-              Fitur manajemen proyek di dalam workspace ini akan tersedia pada tahap selanjutnya.
-            </p>
-          </div>
+          ) : projectsError ? (
+            <div className="rounded-xl border border-red-200 bg-red-50 p-8 text-center text-sm text-red-600 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400">
+              Gagal memuat daftar proyek.
+            </div>
+          ) : projects.length === 0 ? (
+            <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-zinc-300 bg-white p-12 text-center dark:border-zinc-800 dark:bg-zinc-900">
+              <div className="flex size-12 items-center justify-center rounded-full bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
+                <FolderKanban className="size-6" />
+              </div>
+              <h4 className="mt-4 text-base font-semibold text-zinc-900 dark:text-zinc-50">
+                Belum ada proyek
+              </h4>
+              <p className="mt-1 max-w-sm text-sm text-zinc-500 dark:text-zinc-400">
+                Buat proyek pertama Anda untuk memulai.
+              </p>
+            </div>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2">
+              {projects.map((project) => (
+                <Link
+                  key={project.id}
+                  href={`/workspaces/${workspaceId}/projects/${project.id}`}
+                  className="rounded-xl border border-zinc-200 bg-white p-5 shadow-xs transition hover:border-primary/50 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <h4 className="font-semibold text-zinc-900 dark:text-zinc-50">
+                      {project.name}
+                    </h4>
+                    <Badge variant="secondary">
+                      {projectStatusLabels[project.status]}
+                    </Badge>
+                  </div>
+                  <p className="mt-2 line-clamp-2 min-h-10 text-sm text-zinc-500 dark:text-zinc-400">
+                    {project.description || "Tidak ada deskripsi"}
+                  </p>
+                  <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-zinc-500 dark:text-zinc-400">
+                    <span>Prioritas: {projectPriorityLabels[project.priority]}</span>
+                    <span>Anggota: {project.members?.length || 0}</span>
+                    {project.due_date && <span>Deadline: {project.due_date}</span>}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

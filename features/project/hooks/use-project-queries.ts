@@ -51,8 +51,8 @@ export function useUpdateProject() {
         mutationFn: ({ id, payload }: { id: string; payload: ProjectPayload }) =>
             projectApi.updateProject(id, payload),
         onSuccess: (project) => {
-            queryClient.invalidateQueries({ queryKey: ["projects"] });
-            queryClient.setQueryData(["project", project.id], project);
+            // queryClient.invalidateQueries({ queryKey: ["projects"] });
+            queryClient.invalidateQueries({ queryKey: ["project", project.id] });
         },
     });
 }
