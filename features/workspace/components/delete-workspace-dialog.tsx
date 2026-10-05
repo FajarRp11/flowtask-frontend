@@ -59,9 +59,12 @@ export function DeleteWorkspaceDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Hapus Workspace "{workspaceName}"?</AlertDialogTitle>
+          <AlertDialogTitle>
+            Hapus Workspace "{workspaceName}"?
+          </AlertDialogTitle>
           <AlertDialogDescription>
-            Tindakan ini tidak dapat dibatalkan. Seluruh data proyek, tugas, dan anggota di dalam workspace ini akan terhapus secara permanen.
+            Tindakan ini tidak dapat dibatalkan. Seluruh data proyek, tugas, dan
+            anggota di dalam workspace ini akan terhapus secara permanen.
           </AlertDialogDescription>
         </AlertDialogHeader>
 

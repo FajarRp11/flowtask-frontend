@@ -1,4 +1,5 @@
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8001/api";
+export const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8001/api";
 
 export class ApiError extends Error {
   status: number;

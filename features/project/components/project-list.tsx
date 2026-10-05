@@ -10,7 +10,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { useWorkspace } from "@/features/workspace/context/workspace-context";
 import { useProjects } from "../hooks/use-project-queries";
-import { canManageProject } from "../hooks/use-project-permissions";
 import { projectPriorityLabels, projectPriorityOptions, projectStatusLabels, projectStatusOptions } from "../config";
 import { CreateProjectDialog } from "./project-dialogs";
 

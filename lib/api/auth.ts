@@ -1,5 +1,10 @@
 import { apiClient, API_URL } from "./client";
-import { AuthResponse, LoginInput, MeResponse, RegisterInput } from "@/features/auth/types";
+import {
+  AuthResponse,
+  LoginInput,
+  MeResponse,
+  RegisterInput,
+} from "@/features/auth/types";
 
 export async function getCsrfCookie(): Promise<void> {
   const baseUrl = API_URL.replace(/\/api\/?$/, "");

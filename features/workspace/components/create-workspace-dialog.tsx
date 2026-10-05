@@ -70,7 +70,7 @@ export function CreateWorkspaceDialog({
           });
         } else {
           setServerError(
-            err.message || "Gagal membuat workspace. Silakan coba lagi."
+            err.message || "Gagal membuat workspace. Silakan coba lagi.",
           );
         }
       } else {
@@ -93,7 +93,8 @@ export function CreateWorkspaceDialog({
         <DialogHeader>
           <DialogTitle>Buat Workspace Baru</DialogTitle>
           <DialogDescription>
-            Workspace membantu tim Anda mengorganisasi proyek dan tugas secara efisien.
+            Workspace membantu tim Anda mengorganisasi proyek dan tugas secara
+            efisien.
           </DialogDescription>
         </DialogHeader>
 
@@ -103,7 +104,11 @@ export function CreateWorkspaceDialog({
           </div>
         )}
 
-        <form id="create-workspace-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          id="create-workspace-form"
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-4"
+        >
           <div className="space-y-1.5">
             <label
               htmlFor="name"

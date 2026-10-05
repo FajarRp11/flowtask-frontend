@@ -213,7 +213,9 @@ export function WorkspaceMembers({ workspaceId }: WorkspaceMembersProps) {
                               <DropdownMenuLabel>Ubah Peran</DropdownMenuLabel>
                               <DropdownMenuItem
                                 disabled={member.role === "admin"}
-                                onClick={() => handleRoleChange(member, "admin")}
+                                onClick={() =>
+                                  handleRoleChange(member, "admin")
+                                }
                                 className="gap-2"
                               >
                                 <Shield className="size-4" />
@@ -221,7 +223,9 @@ export function WorkspaceMembers({ workspaceId }: WorkspaceMembersProps) {
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 disabled={member.role === "member"}
-                                onClick={() => handleRoleChange(member, "member")}
+                                onClick={() =>
+                                  handleRoleChange(member, "member")
+                                }
                                 className="gap-2"
                               >
                                 <Shield className="size-4" />
@@ -229,7 +233,9 @@ export function WorkspaceMembers({ workspaceId }: WorkspaceMembersProps) {
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 disabled={member.role === "viewer"}
-                                onClick={() => handleRoleChange(member, "viewer")}
+                                onClick={() =>
+                                  handleRoleChange(member, "viewer")
+                                }
                                 className="gap-2"
                               >
                                 <Shield className="size-4" />

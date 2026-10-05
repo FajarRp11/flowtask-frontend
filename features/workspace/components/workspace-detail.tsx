@@ -13,7 +13,10 @@ import { WorkspaceSettingsDialog } from "./workspace-settings-dialog";
 import { WorkspaceRole } from "../types";
 import { CreateProjectDialog } from "@/features/project/components/project-dialogs";
 import { useProjects } from "@/features/project/hooks/use-project-queries";
-import { projectPriorityLabels, projectStatusLabels } from "@/features/project/config";
+import {
+  projectPriorityLabels,
+  projectStatusLabels,
+} from "@/features/project/config";
 import Link from "next/link";
 
 interface WorkspaceDetailProps {
@@ -28,14 +31,21 @@ const roleBadgeLabel: Record<WorkspaceRole, string> = {
 };
 
 export function WorkspaceDetail({ workspaceId }: WorkspaceDetailProps) {
-  const { data: workspace, isLoading, isError, error } = useWorkspaceDetail(workspaceId);
+  const {
+    data: workspace,
+    isLoading,
+    isError,
+    error,
+  } = useWorkspaceDetail(workspaceId);
   const {
     data: projects = [],
     isLoading: projectsLoading,
     isError: projectsError,
   } = useProjects(workspaceId);
   const { role, canManageWorkspace, setSelectedWorkspaceId } = useWorkspace();
-  const [activeTab, setActiveTab] = useState<"projects" | "members">("projects");
+  const [activeTab, setActiveTab] = useState<"projects" | "members">(
+    "projects",
+  );
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [createProjectOpen, setCreateProjectOpen] = useState(false);
 
@@ -57,7 +67,9 @@ export function WorkspaceDetail({ workspaceId }: WorkspaceDetailProps) {
       <div className="rounded-xl border border-red-200 bg-red-50 p-8 text-center text-red-600 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400">
         <h3 className="text-lg font-semibold">Gagal Memuat Workspace</h3>
         <p className="mt-1 text-sm">
-          {error instanceof Error ? error.message : "Workspace tidak ditemukan atau terjadi kesalahan."}
+          {error instanceof Error
+            ? error.message
+            : "Workspace tidak ditemukan atau terjadi kesalahan."}
         </p>
       </div>
     );
@@ -113,20 +125,22 @@ export function WorkspaceDetail({ workspaceId }: WorkspaceDetailProps) {
         <nav className="-mb-px flex gap-6" aria-label="Tabs">
           <button
             onClick={() => setActiveTab("projects")}
-            className={`flex items-center gap-2 border-b-2 py-3 px-1 text-sm font-medium transition ${activeTab === "projects"
-              ? "border-primary text-primary"
-              : "border-transparent text-zinc-500 hover:border-zinc-300 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
-              }`}
+            className={`flex items-center gap-2 border-b-2 py-3 px-1 text-sm font-medium transition ${
+              activeTab === "projects"
+                ? "border-primary text-primary"
+                : "border-transparent text-zinc-500 hover:border-zinc-300 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+            }`}
           >
             <FolderKanban className="size-4" />
             <span>Proyek</span>
           </button>
           <button
             onClick={() => setActiveTab("members")}
-            className={`flex items-center gap-2 border-b-2 py-3 px-1 text-sm font-medium transition ${activeTab === "members"
-              ? "border-primary text-primary"
-              : "border-transparent text-zinc-500 hover:border-zinc-300 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
-              }`}
+            className={`flex items-center gap-2 border-b-2 py-3 px-1 text-sm font-medium transition ${
+              activeTab === "members"
+                ? "border-primary text-primary"
+                : "border-transparent text-zinc-500 hover:border-zinc-300 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+            }`}
           >
             <Users className="size-4" />
             <span>Anggota ({memberCount})</span>
@@ -143,7 +157,10 @@ export function WorkspaceDetail({ workspaceId }: WorkspaceDetailProps) {
             </h3>
             <div className="flex items-center gap-2">
               {canManageWorkspace && (
-                <Button onClick={() => setCreateProjectOpen(true)} className="gap-2">
+                <Button
+                  onClick={() => setCreateProjectOpen(true)}
+                  className="gap-2"
+                >
                   <Plus className="size-4" />
                   <span>Create project</span>
                 </Button>
@@ -201,9 +218,13 @@ export function WorkspaceDetail({ workspaceId }: WorkspaceDetailProps) {
                     {project.description || "Tidak ada deskripsi"}
                   </p>
                   <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-zinc-500 dark:text-zinc-400">
-                    <span>Prioritas: {projectPriorityLabels[project.priority]}</span>
+                    <span>
+                      Prioritas: {projectPriorityLabels[project.priority]}
+                    </span>
                     <span>Anggota: {project.members?.length || 0}</span>
-                    {project.due_date && <span>Deadline: {project.due_date}</span>}
+                    {project.due_date && (
+                      <span>Deadline: {project.due_date}</span>
+                    )}
                   </div>
                 </Link>
               ))}
@@ -212,7 +233,9 @@ export function WorkspaceDetail({ workspaceId }: WorkspaceDetailProps) {
         </div>
       )}
 
-      {activeTab === "members" && <WorkspaceMembers workspaceId={workspaceId} />}
+      {activeTab === "members" && (
+        <WorkspaceMembers workspaceId={workspaceId} />
+      )}
 
       {/* Settings Dialog */}
       {workspace && (

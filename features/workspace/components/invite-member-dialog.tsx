@@ -73,7 +73,7 @@ export function InviteMemberDialog({
           });
         } else {
           setServerError(
-            err.message || "Gagal menambahkan anggota. Silakan coba lagi."
+            err.message || "Gagal menambahkan anggota. Silakan coba lagi.",
           );
         }
       } else {
@@ -96,7 +96,8 @@ export function InviteMemberDialog({
         <DialogHeader>
           <DialogTitle>Tambah Anggota Workspace</DialogTitle>
           <DialogDescription>
-            Masukkan User ID (UUID) dan tentukan peran pengguna di workspace ini.
+            Masukkan User ID (UUID) dan tentukan peran pengguna di workspace
+            ini.
           </DialogDescription>
         </DialogHeader>
 
@@ -144,9 +145,15 @@ export function InviteMemberDialog({
                     <SelectValue placeholder="Pilih peran" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="admin">Admin (Dapat mengelola workspace & anggota)</SelectItem>
-                    <SelectItem value="member">Member (Dapat membuat & mengelola proyek/tugas)</SelectItem>
-                    <SelectItem value="viewer">Viewer (Hanya dapat melihat)</SelectItem>
+                    <SelectItem value="admin">
+                      Admin (Dapat mengelola workspace & anggota)
+                    </SelectItem>
+                    <SelectItem value="member">
+                      Member (Dapat membuat & mengelola proyek/tugas)
+                    </SelectItem>
+                    <SelectItem value="viewer">
+                      Viewer (Hanya dapat melihat)
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               )}
@@ -166,7 +173,9 @@ export function InviteMemberDialog({
               Batal
             </Button>
             <Button type="submit" disabled={addMemberMutation.isPending}>
-              {addMemberMutation.isPending ? "Menambahkan..." : "Tambah Anggota"}
+              {addMemberMutation.isPending
+                ? "Menambahkan..."
+                : "Tambah Anggota"}
             </Button>
           </DialogFooter>
         </form>

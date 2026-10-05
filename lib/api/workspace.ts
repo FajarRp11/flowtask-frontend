@@ -23,24 +23,29 @@ export const workspaceApi = {
     return response.data;
   },
 
-  createWorkspace: async (payload: CreateWorkspacePayload): Promise<Workspace> => {
-    const response = await apiClient<{ data: Workspace; message: string }>("/workspaces", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
+  createWorkspace: async (
+    payload: CreateWorkspacePayload,
+  ): Promise<Workspace> => {
+    const response = await apiClient<{ data: Workspace; message: string }>(
+      "/workspaces",
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+      },
+    );
     return response.data;
   },
 
   updateWorkspace: async (
     id: string,
-    payload: UpdateWorkspacePayload
+    payload: UpdateWorkspacePayload,
   ): Promise<Workspace> => {
     const response = await apiClient<{ data: Workspace; message: string }>(
       `/workspaces/${id}`,
       {
         method: "PATCH",
         body: JSON.stringify(payload),
-      }
+      },
     );
     return response.data;
   },
@@ -56,48 +61,48 @@ export const workspaceApi = {
       `/workspaces/${workspaceId}/members`,
       {
         method: "GET",
-      }
+      },
     );
     return response.data;
   },
 
   addMember: async (
     workspaceId: string,
-    payload: AddWorkspaceMemberPayload
+    payload: AddWorkspaceMemberPayload,
   ): Promise<WorkspaceMember> => {
-    const response = await apiClient<{ data: WorkspaceMember; message: string }>(
-      `/workspaces/${workspaceId}/members`,
-      {
-        method: "POST",
-        body: JSON.stringify(payload),
-      }
-    );
+    const response = await apiClient<{
+      data: WorkspaceMember;
+      message: string;
+    }>(`/workspaces/${workspaceId}/members`, {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
     return response.data;
   },
 
   updateMemberRole: async (
     workspaceId: string,
     userId: string,
-    payload: UpdateWorkspaceMemberRolePayload
+    payload: UpdateWorkspaceMemberRolePayload,
   ): Promise<{ message: string }> => {
     return apiClient<{ message: string }>(
       `/workspaces/${workspaceId}/members/${userId}`,
       {
         method: "PATCH",
         body: JSON.stringify(payload),
-      }
+      },
     );
   },
 
   removeMember: async (
     workspaceId: string,
-    userId: string
+    userId: string,
   ): Promise<{ message: string }> => {
     return apiClient<{ message: string }>(
       `/workspaces/${workspaceId}/members/${userId}`,
       {
         method: "DELETE",
-      }
+      },
     );
   },
 };

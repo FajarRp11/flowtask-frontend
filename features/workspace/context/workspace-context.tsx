@@ -33,7 +33,7 @@ interface WorkspaceContextType {
 }
 
 const WorkspaceContext = createContext<WorkspaceContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export function WorkspaceProvider({ children }: { children: ReactNode }) {
@@ -86,7 +86,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     enabled: isAuthenticated && !!selectedWorkspaceSummary?.id,
   });
 
-  const workspaceForPermissions = selectedWorkspaceDetail || selectedWorkspaceSummary;
+  const workspaceForPermissions =
+    selectedWorkspaceDetail || selectedWorkspaceSummary;
 
   useEffect(() => {
     if (selectedWorkspace && selectedWorkspace.id !== selectedWorkspaceId) {
@@ -108,7 +109,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     // Check members list
     if (workspaceForPermissions.members) {
       const member = workspaceForPermissions.members.find(
-        (m) => String(m.id) === String(user.id) || m.email === user.email
+        (m) => String(m.id) === String(user.id) || m.email === user.email,
       );
       if (member) return member.role;
     }
