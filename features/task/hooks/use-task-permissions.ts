@@ -3,8 +3,8 @@ import { ProjectRole } from "@/features/project/types";
 import { WorkspaceRole } from "@/features/workspace/types";
 
 export function canManageTask(
-    workspaceRole?: WorkspaceRole | null,
-    projectRole?: ProjectRole | null,
+  workspaceRole?: WorkspaceRole | null,
+  projectRole?: ProjectRole | null,
 ) {
-    return canManageProject(workspaceRole, projectRole);
+  return canManageProject(workspaceRole, projectRole);
 }

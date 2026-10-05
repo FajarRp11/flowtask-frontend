@@ -5,51 +5,57 @@ import { taskApi } from "../api/task";
 import { CreateTaskPayload, TaskPayload } from "../types";
 
 export function useTasks(projectId?: string) {
-    return useQuery({
-        queryKey: ["tasks", projectId],
-        queryFn: () => taskApi.getTasks(projectId!),
-        enabled: !!projectId,
-    });
+  return useQuery({
+    queryKey: ["tasks", projectId],
+    queryFn: () => taskApi.getTasks(projectId!),
+    enabled: !!projectId,
+  });
 }
 
 export function useTask(taskId?: string) {
-    return useQuery({
-        queryKey: ["task", taskId],
-        queryFn: () => taskApi.getTask(taskId!),
-        enabled: !!taskId,
-    });
+  return useQuery({
+    queryKey: ["task", taskId],
+    queryFn: () => taskApi.getTask(taskId!),
+    enabled: !!taskId,
+  });
 }
 
 export function useCreateTask(projectId: string) {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: (payload: CreateTaskPayload) => taskApi.createTask(projectId, payload),
-        onSuccess: (task) => {
-            queryClient.invalidateQueries({ queryKey: ["tasks", projectId] });
-            queryClient.setQueryData(["task", task.id], task);
-        },
-    });
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: CreateTaskPayload) =>
+      taskApi.createTask(projectId, payload),
+    onSuccess: (task) => {
+      queryClient.invalidateQueries({ queryKey: ["tasks", projectId] });
+      queryClient.setQueryData(["task", task.id], task);
+    },
+  });
 }
 
 export function useUpdateTask() {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: ({ taskId, payload }: { taskId: string; payload: TaskPayload }) =>
-            taskApi.updateTask(taskId, payload),
-        onSuccess: (task) => {
-            queryClient.invalidateQueries({ queryKey: ["tasks"] });
-            queryClient.invalidateQueries({ queryKey: ["task", task.id] });
-        },
-    });
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      taskId,
+      payload,
+    }: {
+      taskId: string;
+      payload: TaskPayload;
+    }) => taskApi.updateTask(taskId, payload),
+    onSuccess: (task) => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["task", task.id] });
+    },
+  });
 }
 
 export function useDeleteTask() {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: (taskId: string) => taskApi.deleteTask(taskId),
-        onSuccess: (_, taskId) => {
-            queryClient.invalidateQueries({ queryKey: ["tasks"] });
-            queryClient.removeQueries({ queryKey: ["task", taskId] });
-        },
-    });
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (taskId: string) => taskApi.deleteTask(taskId),
+    onSuccess: (_, taskId) => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.removeQueries({ queryKey: ["task", taskId] });
+    },
+  });
 }
