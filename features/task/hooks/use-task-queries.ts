@@ -59,3 +59,35 @@ export function useDeleteTask() {
     },
   });
 }
+
+export function useTaskAssignees(taskId?: string) {
+  return useQuery({
+    queryKey: ["task", taskId, "assignees"],
+    queryFn: () => taskApi.getAssignees(taskId!),
+    enabled: !!taskId,
+  });
+}
+
+export function useAddTaskAssignee(taskId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (userId: string) => taskApi.addAssignee(taskId, userId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["task", taskId, "assignees"] });
+      queryClient.invalidateQueries({ queryKey: ["task", taskId] });
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+  });
+}
+
+export function useRemoveTaskAssignee(taskId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (userId: string) => taskApi.removeAssignee(taskId, userId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["task", taskId, "assignees"] });
+      queryClient.invalidateQueries({ queryKey: ["task", taskId] });
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+  });
+}

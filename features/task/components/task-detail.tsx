@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, CalendarDays, Pencil, Trash2 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -14,6 +13,7 @@ import { canManageTask } from "../hooks/use-task-permissions";
 import { useTask } from "../hooks/use-task-queries";
 import { taskPriorityLabels, taskStatusLabels } from "../config";
 import { DeleteTaskDialog, EditTaskDialog } from "./task-dialogs";
+import { TaskAssignees } from "./task-assignees";
 
 export function TaskDetail({
   workspaceId,
@@ -98,7 +98,7 @@ export function TaskDetail({
             </div>
           )}
         </div>
-        <div className="mt-6 grid gap-4 border-t pt-5 text-sm sm:grid-cols-3">
+        <div className="mt-6 grid gap-4 border-t pt-5 text-sm sm:grid-cols-2">
           <div>
             <p className="text-muted-foreground">Due date</p>
             <p className="mt-1 flex items-center gap-1 font-medium">
@@ -110,36 +110,13 @@ export function TaskDetail({
             <p className="text-muted-foreground">Project</p>
             <p className="mt-1 font-medium">{project.name}</p>
           </div>
-          <div>
-            <p className="text-muted-foreground">Assignees</p>
-            {task.assignees?.length ? (
-              <div className="mt-1 flex flex-wrap gap-2">
-                {task.assignees.map((assignee) => (
-                  <span
-                    key={assignee.id}
-                    className="flex items-center gap-1.5 font-medium"
-                  >
-                    <Avatar className="size-5">
-                      <AvatarImage src={assignee.avatar || undefined} />
-                      <AvatarFallback>
-                        {assignee.name.charAt(0).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    {assignee.name}
-                  </span>
-                ))}
-              </div>
-            ) : (
-              <p className="mt-1 font-medium">Unassigned</p>
-            )}
-          </div>
         </div>
       </div>
+      <TaskAssignees taskId={task.id} projectId={projectId} canManage={canManage} />
       <section className="rounded-xl border border-dashed p-8">
         <h2 className="font-semibold">Future task tools</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Checklists, labels, comments, and assignee management will be added in
-          a later feature.
+          Checklists, labels, and comments will be added in a later feature.
         </p>
       </section>
       <EditTaskDialog

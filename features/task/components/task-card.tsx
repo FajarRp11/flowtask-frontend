@@ -26,7 +26,7 @@ export function TaskCard({
         id: `task-drop:${task.id}`,
         data: { taskId: task.id, status: task.status },
     });
-    const assignee = task.assignees?.[0];
+    const assignees = task.assignees || [];
     return (
         <div ref={droppableRef} className={isDropTarget ? "rounded-lg ring-2 ring-primary/40" : ""}>
             <div ref={draggableRef} className={isDragging ? "opacity-40" : ""}>
@@ -48,17 +48,15 @@ export function TaskCard({
                             {task.due_date}
                         </p>
                     )}
-                    {assignee && (
-                        <div className="mt-3 flex items-center gap-2">
-                            <Avatar className="size-6">
-                                <AvatarImage src={assignee.avatar || undefined} />
-                                <AvatarFallback>
-                                    {assignee.name.charAt(0).toUpperCase()}
-                                </AvatarFallback>
-                            </Avatar>
-                            <span className="truncate text-xs text-muted-foreground">
-                                {assignee.name}
-                            </span>
+                    {assignees.length > 0 && (
+                        <div className="mt-3 flex items-center -space-x-1">
+                            {assignees.slice(0, 3).map((assignee) => (
+                                <Avatar key={assignee.id} className="size-6 border-2 border-white dark:border-zinc-900" aria-label={assignee.name}>
+                                    <AvatarImage src={assignee.avatar || undefined} />
+                                    <AvatarFallback>{assignee.name.charAt(0).toUpperCase()}</AvatarFallback>
+                                </Avatar>
+                            ))}
+                            {assignees.length > 3 && <span className="ml-2 text-xs text-muted-foreground">+{assignees.length - 3}</span>}
                         </div>
                     )}
                 </div>
