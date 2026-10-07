@@ -98,7 +98,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup className="mt-auto">
+        <SidebarGroup>
           <SidebarGroupLabel>Lainnya</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
