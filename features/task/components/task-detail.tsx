@@ -14,6 +14,7 @@ import { useTask } from "../hooks/use-task-queries";
 import { taskPriorityLabels, taskStatusLabels } from "../config";
 import { DeleteTaskDialog, EditTaskDialog } from "./task-dialogs";
 import { TaskAssignees } from "./task-assignees";
+import { TaskLabels } from "@/features/label/components/task-labels";
 
 export function TaskDetail({
   workspaceId,
@@ -113,6 +114,7 @@ export function TaskDetail({
         </div>
       </div>
       <TaskAssignees taskId={task.id} projectId={projectId} canManage={canManage} />
+      <TaskLabels taskId={task.id} workspaceId={workspaceId} canManage={canManage} />
       <section className="rounded-xl border border-dashed p-8">
         <h2 className="font-semibold">Future task tools</h2>
         <p className="mt-1 text-sm text-muted-foreground">

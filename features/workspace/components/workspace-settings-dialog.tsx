@@ -7,7 +7,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -19,6 +18,7 @@ import { useWorkspace } from "../context/workspace-context";
 import { DeleteWorkspaceDialog } from "./delete-workspace-dialog";
 import { ApiError } from "@/lib/api/client";
 import { Workspace } from "../types";
+import { WorkspaceLabels } from "@/features/label/components/workspace-labels";
 
 interface WorkspaceSettingsDialogProps {
   workspace: Workspace;
@@ -161,6 +161,8 @@ export function WorkspaceSettingsDialog({
               </div>
             )}
           </form>
+
+          <WorkspaceLabels workspaceId={workspace.id} />
 
           {canDeleteWorkspace && (
             <div className="mt-6 rounded-lg border border-red-200 bg-red-50/50 p-4 dark:border-red-900/50 dark:bg-red-950/20">

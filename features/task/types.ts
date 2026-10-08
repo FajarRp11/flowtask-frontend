@@ -1,3 +1,5 @@
+import { Label } from "@/features/label/types";
+
 export type TaskStatus = "todo" | "in_progress" | "review" | "done";
 export type TaskPriority = "low" | "medium" | "high" | "urgent";
 
@@ -22,6 +24,7 @@ export interface Task {
   due_date?: string | null;
   project?: TaskProject;
   assignees?: TaskAssignee[];
+  labels?: Label[];
 }
 
 export interface TaskPayload {
