@@ -8,13 +8,7 @@ import {
 import { AuthGuard } from "@/features/auth/components/auth-guard";
 import React from "react";
 
-const AppLayout = ({
-  children,
-  pageTitle,
-}: {
-  children: React.ReactNode;
-  pageTitle: string;
-}) => {
+const AppLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <AuthGuard>
       <SidebarProvider>
@@ -25,7 +19,7 @@ const AppLayout = ({
               <SidebarTrigger className="-ml-1" />
               <Separator orientation="vertical" className="mr-2 h-4" />
               <h1 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
-                {pageTitle || "FlowTask"}
+                FlowTask
               </h1>
             </div>
           </header>
